@@ -1,7 +1,7 @@
 name = "MassExport"
 uuid = "bdad8087-1bf2-41e1-917c-1d9e34c2a82c"
 authors = ["josePereiro <jose.pereiro.personal@gmail.com> and contributors"]
-version = "1.0.0-DEV"
+version = "1.0.1"
 
 [compat]
 julia = "1.10"
