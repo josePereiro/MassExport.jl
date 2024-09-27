@@ -9,7 +9,7 @@ module MassExport
 
     macro exportall_underscore()
         return quote
-            MetXBase.exportall($(__module__)) do sym
+            MassExport.exportall($(__module__)) do sym
                 startswith(string(sym), r"@?_") && return true
                 return false
             end
@@ -18,7 +18,7 @@ module MassExport
 
     macro exportall_words()
         return quote
-            MetXBase.exportall($(__module__)) do sym
+            MassExport.exportall($(__module__)) do sym
                 sym == :eval && return false
                 sym == :include && return false
                 startswith(string(sym), r"@?[a-zA-Z]") && return true
@@ -29,7 +29,7 @@ module MassExport
 
     macro exportall_non_underscore()
         return quote
-            MetXBase.exportall($(__module__)) do sym
+            MassExport.exportall($(__module__)) do sym
                 sym == :eval && return false
                 sym == :include && return false
                 startswith(string(sym), r"@?[^_#]") && return true
@@ -40,7 +40,7 @@ module MassExport
 
     macro exportall_uppercase()
         return quote
-            MetXBase.exportall($(__module__)) do sym
+            MassExport.exportall($(__module__)) do sym
                 startswith(string(sym), r"@?[A-Z]") && return true
                 return false
             end
