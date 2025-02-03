@@ -7,6 +7,16 @@ module MassExport
         end
     end
 
+    macro exportall()
+        return quote
+            MassExport.exportall($(__module__)) do sym
+                sym == :eval && return false
+                sym == :include && return false
+                return true
+            end
+        end
+    end
+
     macro exportall_underscore()
         return quote
             MassExport.exportall($(__module__)) do sym
