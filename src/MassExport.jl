@@ -1,65 +1,27 @@
 module MassExport
 
-    function exportall(filter::Function, mod::Module)
-        for sym in names(mod; all = true, imported = true)
-            filter(sym) == true || continue
-            @eval mod export $(sym)
-        end
-    end
+    """
+        MassExport
 
-    macro exportall()
-        return quote
-            MassExport.exportall($(__module__)) do sym
-                sym == :eval && return false
-                sym == :include && return false
-                return true
-            end
-        end
-    end
+        Utilities for mass-exporting bindings from a module, using simple
+        filtering rules.
 
-    macro exportall_underscore()
-        return quote
-            MassExport.exportall($(__module__)) do sym
-                startswith(string(sym), "_") && return true
-                startswith(string(sym), "@") && return true
-                return false
-            end
-        end
-    end
+        The core entry point is [`exportall`](@ref), and several convenience
+        macros are provided:
 
-    macro exportall_words()
-        return quote
-            MassExport.exportall($(__module__)) do sym
-                sym == :eval && return false
-                sym == :include && return false
-                startswith(string(sym), r"[a-zA-Z]") && return true
-                startswith(string(sym), "@") && return true
-                return false
-            end
-        end
-    end
+        * [`@exportall`](@ref)               - export everything except a few internals
+        * [`@exportall_underscore`](@ref)    - export only names starting with `_` / `@_`
+        * [`@exportall_words`](@ref)         - export names starting with a letter / `@letter`
+        * [`@exportall_non_underscore`](@ref) - export names that do *not* start with `_` or `#`
+        * [`@exportall_uppercase`](@ref)     - export names starting with an uppercase letter
+    """
 
-    macro exportall_non_underscore()
-        return quote
-            MassExport.exportall($(__module__)) do sym
-                sym == :eval && return false
-                sym == :include && return false
-                startswith(string(sym), r"[^_#]") && return true
-                startswith(string(sym), r"@[^_#]") && return true
-                return false
-            end
-        end
-    end
+    using Reexport
+    @reexport using Reexport
 
-    macro exportall_uppercase()
-        return quote
-            MassExport.exportall($(__module__)) do sym
-                startswith(string(sym), r"[A-Z]") && return true
-                startswith(string(sym), "@") && return true
-                return false
-            end
-        end
-    end
+    #! include .
+    include("export.jl")
+    include("import.jl")
+    include("utils.jl")
 
-    @exportall_words()
 end
